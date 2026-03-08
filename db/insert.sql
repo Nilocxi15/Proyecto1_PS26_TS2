@@ -48,105 +48,105 @@ VALUES
         'Admin 1',
         'admin1@munixela.gt',
         '50100001',
-        'hash',
+        '$2y$12$7pmlm326mTgQY6vZzw9Z3uxvRlL.keCZSpLOPMvsxPlCPzO7Hnzwa',
         1
     ),
     (
         'Admin 2',
         'admin2@munixela.gt',
         '50100002',
-        'hash',
+        '$2y$12$iE8IDlprqTj.LcX76lhqrOetiC/oykXCZvtqnHc9K32zXs3oAAcQS',
         1
     ),
     (
         'Admin 3',
         'admin3@munixela.gt',
         '50100003',
-        'hash',
+        '$2y$12$xAVf50mCIOVjgRyhe6TpceW.ivQ6xOUUWG0BAP5dPs7WJwmdWFEQ6',
         1
     ),
     (
         'Coord 1',
         'coord1@munixela.gt',
         '50200001',
-        'hash',
+        '$2y$12$8k/QkCgzOOMfyCefq.6GEuWoA9VFTxyrta6ujUFGBjn0mC2tBuS.i',
         2
     ),
     (
         'Coord 2',
         'coord2@munixela.gt',
         '50200002',
-        'hash',
+        '$2y$12$4KKYsBI23EYBohPonlY9duvg3NAdolo084qhFWmr77TMie7brxYi2',
         2
     ),
     (
         'Coord 3',
         'coord3@munixela.gt',
         '50200003',
-        'hash',
+        '$2y$12$FPf2QQ80CdsYfBlq4B.KoeIr1VixcjZmyZ.65LRjcI93UPmpqaOCO',
         2
     ),
     (
         'Operador 1',
         'op1@munixela.gt',
         '50300001',
-        'hash',
+        '$2y$12$ITHdLSqo6txyI/i5fDGzS.PJvz7iqSivWVWj4dAdNE4lcJ26GMokq',
         3
     ),
     (
         'Operador 2',
         'op2@munixela.gt',
         '50300002',
-        'hash',
+        '$2y$12$Q4tEM6Ipk2AztUX4gmpVM.uiYxjhDB7ewzJxJT5IUXwbSS8BP/n7i',
         3
     ),
     (
         'Operador 3',
         'op3@munixela.gt',
         '50300003',
-        'hash',
+        '$2y$12$4JDabR5nkL06ucHbu/KFw.Uj2NSB6nK4KnbWiZZKs069wFor6JoV2',
         3
     ),
     (
         'Ciudadano 1',
         'c1@email.com',
         '50400001',
-        'hash',
+        '$2y$12$4ftA8NK/T1Ywy3EpOsHfdONl6x26id4jm5zwxTkeZqGQocnVN1Jwi',
         4
     ),
     (
         'Ciudadano 2',
         'c2@email.com',
         '50400002',
-        'hash',
+        '$2y$12$6XQY.K0mwb9N2rOuAw9gCOJIzEuPlNGImAygboq/cBs7DxgZ5urfC',
         4
     ),
     (
         'Ciudadano 3',
         'c3@email.com',
         '50400003',
-        'hash',
+        '$2y$12$5DdTaeGmd8b2p5GcY0vjJOf9.mJyso2Lx1LxQZHolyLOTb4kiC2wy',
         4
     ),
     (
         'Auditor 1',
         'aud1@munixela.gt',
         '50500001',
-        'hash',
+        '$2y$12$zPXcnpP4bpekwRsbDaDMYOG1ykFQUKqSlo4Kxqkv8Aumlpv6Rw4wW',
         5
     ),
     (
         'Auditor 2',
         'aud2@munixela.gt',
         '50500002',
-        'hash',
+        '$2y$12$0I0Ht0Hr5hymtNO3.yt26OxTfZgTB5Lmabyk7TtTF14v7mMszUrMq',
         5
     ),
     (
         'Auditor 3',
         'aud3@munixela.gt',
         '50500003',
-        'hash',
+        '$2y$12$8qsnoQ.YQB.AS2K754o/2e5sjvVsCyT3hDCIc0N4Nu3r4vifzUs8K',
         5
     );
 
