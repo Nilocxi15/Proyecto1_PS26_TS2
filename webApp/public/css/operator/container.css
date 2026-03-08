@@ -1,0 +1,42 @@
+.body-content {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.header h1 {
+    margin-bottom: 0;
+}
+
+.page-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.filter-bar {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.filter-bar .form-label {
+    font-weight: 600;
+    color: #212529;
+}
+
+.empty-state {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}

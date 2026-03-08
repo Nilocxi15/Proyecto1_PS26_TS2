@@ -1,0 +1,30 @@
+.body-content {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.schedule-tools {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.schedule-tools .form-label {
+    font-weight: 600;
+    color: #212529;
+}
+
+.empty-state {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}

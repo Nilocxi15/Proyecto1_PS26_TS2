@@ -1,0 +1,61 @@
+.body-content {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.header h1 {
+    margin-bottom: 0;
+}
+
+.register-delivery-btn {
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-wrap: wrap;
+    }
+
+    .register-delivery-btn {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .register-delivery-btn .btn {
+        width: 100%;
+    }
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.schedule-tools {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.schedule-tools .form-label {
+    font-weight: 600;
+    color: #212529;
+}
+
+.empty-state {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}
