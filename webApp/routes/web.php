@@ -98,3 +98,52 @@ Route::get('/admin/system-settings', function () {
 Route::get('/admin/user-profile', function () {
     return view('admin.profile');
 })->name('admin.user-profile');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página de inicio (Rol auditor)
+// ---------------------------------------------------------------------------
+Route::get('/auditor/home', function () {
+    return view('auditor.home');
+})->name('home-auditor');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página del perfil del auditor
+// ---------------------------------------------------------------------------
+Route::get('/auditor/profile', function () {
+    return view('auditor.profile');
+})->name('profile-auditor');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página de inicio (Rol coordinador de rutas)
+// ---------------------------------------------------------------------------
+Route::get('/coordinator/home', function () {
+    return view('coordinator.home');
+})->name('home-coordinator');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página de incidentes del coordinador de rutas
+// ---------------------------------------------------------------------------
+Route::get('/coordinator/incidents', function () {
+    return view('coordinator.incidents');
+})->name('coordinator.incidents');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página de planificación de rutas del coordinador de rutas
+// ---------------------------------------------------------------------------
+Route::get('/coordinator/routes', function () {
+    return view('coordinator.routes');
+})->name('coordinator.routes');
+
+// ---------------------------------------------------------------------------
+// Rutas para la página de perfil del coordinador de rutas
+// ---------------------------------------------------------------------------
+Route::get('/coordinator/profile', function () {
+    return view('coordinator.profile');
+})->name('coordinator.profile');
+
+// ---------------------------------------------------------------------------
+// Rutas para la gestión de camiones (Rol coordinador de rutas)
+// ---------------------------------------------------------------------------
+Route::get('/coordinator/trucks', function () {
+    return view('coordinator.trucks');
+})->name('coordinator.trucks');

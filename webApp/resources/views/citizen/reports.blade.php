@@ -37,7 +37,7 @@
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i
+                                <a class="nav-link active" aria-current="page" href="{{ route('report-citizen') }}"><i
                                         class="bi bi-file-earmark-medical"></i> Reportes y
                                     denuncias</a>
                             </li>

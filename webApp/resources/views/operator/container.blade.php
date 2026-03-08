@@ -37,7 +37,7 @@
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i class="bi bi-trash"></i>
+                                <a class="nav-link active" aria-current="page" href="{{ route('operator.containers') }}"><i class="bi bi-trash"></i>
                                     Gestión de contenedores</a>
                             </li>
                             <li class="nav-item">

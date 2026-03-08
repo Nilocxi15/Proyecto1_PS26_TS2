@@ -41,7 +41,7 @@
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i
+                                <a class="nav-link active" aria-current="page" href="{{ route('admin.users') }}"><i
                                         class="bi bi-file-earmark-medical"></i> Gestión de Usuarios</a>
                             </li>
                             <li class="nav-item">

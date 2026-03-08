@@ -41,7 +41,7 @@
                                     denuncias</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i
+                                <a class="nav-link active" aria-current="page" href="{{ route('citizen.public-statistics') }}"><i
                                         class="bi bi-bar-chart"></i> Estadísticas
                                     Públicas</a>
                             </li>

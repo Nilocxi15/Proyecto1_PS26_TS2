@@ -41,7 +41,7 @@
                                     Gestión de contenedores</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#"><i
+                                <a class="nav-link active" aria-current="page" href="{{ route('profile-operator') }}"><i
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
                             <li class="nav-item">
