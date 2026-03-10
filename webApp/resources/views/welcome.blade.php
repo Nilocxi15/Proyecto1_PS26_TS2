@@ -17,13 +17,25 @@
         
         <div class="login-box">
             <h2>Iniciar Sesión</h2>
+
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-error">{{ session('error') }}</div>
+            @endif
+
+            @if ($errors->any())
+                <div class="alert alert-error">{{ $errors->first() }}</div>
+            @endif
             
-            <form method="POST" action="#">
+            <form method="POST" action="{{ route('login.store') }}">
                 @csrf
                 
                 <div class="form-group">
                     <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email" required placeholder="tu@email.com">
+                    <input type="email" id="email" name="email" required placeholder="tu@email.com" value="{{ old('email') }}">
                 </div>
                 
                 <div class="form-group">

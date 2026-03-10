@@ -36,7 +36,8 @@
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('coordinator.routes') }}"><i class="bi bi-signpost-split"></i>
+                                <a class="nav-link" href="{{ route('coordinator.routes') }}"><i
+                                        class="bi bi-signpost-split"></i>
                                     Gestión de Rutas</a>
                             </li>
                             <li class="nav-item">
@@ -53,7 +54,12 @@
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
+                                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>

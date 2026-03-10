@@ -45,7 +45,8 @@
                                     Gestión de Camiones</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ route('coordinator.incidents') }}"><i
+                                <a class="nav-link active" aria-current="page"
+                                    href="{{ route('coordinator.incidents') }}"><i
                                         class="bi bi-exclamation-triangle"></i>
                                     Incidentes</a>
                             </li>
@@ -54,7 +55,12 @@
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
+                                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>
