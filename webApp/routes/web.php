@@ -159,3 +159,11 @@ Route::middleware('role:2')->group(function () {
         return view('coordinator.trucks');
     })->name('coordinator.trucks');
 });
+
+// ---------------------------------------------------------------------------
+// Rutas para páginas de error personalizadas
+// ---------------------------------------------------------------------------
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
+
