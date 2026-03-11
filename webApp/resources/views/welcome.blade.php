@@ -52,6 +52,7 @@
             <div class="signup-section">
                 <p>¿No tienes cuenta?</p>
                 <a href="{{ route('register') }}" class="btn-signup">Registrarse</a>
+                <a href="{{ route('home-public') }}" class="btn-public">Ir a la página pública</a>
             </div>
         </div>
     </div>

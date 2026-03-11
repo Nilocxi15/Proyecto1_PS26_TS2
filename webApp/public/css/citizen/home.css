@@ -28,3 +28,51 @@ h1 {
     color: #664d03;
     border: 1px solid #ffecb5;
 }
+
+.table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.table-pagination .page-info {
+    min-width: 130px;
+    text-align: center;
+    font-weight: 600;
+    color: #495057;
+}
+
+.map-tools {
+    padding-top: 24px;
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.map-wrapper {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+#routesMap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 460px;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+#greenPointsMap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    min-height: 460px;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+}
+
+@media (max-width: 768px) {
+    #routesMap,
+    #greenPointsMap {
+        min-height: 360px;
+    }
+}

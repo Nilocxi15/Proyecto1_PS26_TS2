@@ -14,11 +14,21 @@
 </head>
 
 <body>
+    @php
+        $estaAutenticado = auth()->check();
+    @endphp
+
     <div class="navbar-container">
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#"><img src="{{ asset('icono-reciclaje.png') }}" alt="Logo" width="30"
                         height="24" class="d-inline-block align-text-top"> Estadísticas Públicas</a>
+                @if (!$estaAutenticado)
+                    <a class="btn btn-success btn-sm d-none d-lg-inline-flex align-items-center me-2"
+                        href="{{ route('login') }}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                    </a>
+                @endif
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,19 +42,24 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home-citizen') }}"><i class="bi bi-house"></i>
+                                <a class="nav-link" href="{{ route('home-public') }}"><i class="bi bi-house"></i>
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('report-citizen') }}"><i
-                                        class="bi bi-file-earmark-medical"></i> Reportes y
-                                    denuncias</a>
+                                @if ($estaAutenticado)
+                                    <a class="nav-link" href="{{ route('report-citizen') }}"><i
+                                            class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                @else
+                                    <a class="nav-link" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i>
+                                        Iniciar sesión para denunciar</a>
+                                @endif
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{{ route('citizen.public-statistics') }}"><i
                                         class="bi bi-bar-chart"></i> Estadísticas
                                     Públicas</a>
                             </li>
+                            @if ($estaAutenticado)
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('profile-citizen') }}"><i
                                         class="bi bi-person-circle"></i> Mi perfil</a>
@@ -57,6 +72,13 @@
                                     </button>
                                 </form>
                             </li>
+                            @else
+                            <li class="nav-item mt-2">
+                                <a class="btn btn-success w-100" href="{{ route('login') }}">
+                                    <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                                </a>
+                            </li>
+                            @endif
                         </ul>
                     </div>
                 </div>

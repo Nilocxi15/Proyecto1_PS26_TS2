@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('icono-reciclaje.png') }}">
     <link rel="stylesheet" href="{{ asset('css/citizen/profile.css') }}">
     <title>Mi Perfil</title>
@@ -15,6 +16,14 @@
 </head>
 
 <body>
+    @php
+        $estaAutenticado = auth()->check();
+        
+        // Obtener el usuario autenticado y su foto de perfil
+        $usuario = auth()->user();
+        $fotoPerfil = $usuario?->foto_perfil ? asset($usuario->foto_perfil) : asset('images/default-avatar.png');
+    @endphp
+
     <div class="navbar-container">
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
@@ -33,30 +42,43 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home-citizen') }}"><i class="bi bi-house"></i>
+                                <a class="nav-link" href="{{ route('home-public') }}"><i class="bi bi-house"></i>
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('report-citizen') }}"><i
-                                        class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                @if ($estaAutenticado)
+                                    <a class="nav-link" href="{{ route('report-citizen') }}"><i
+                                            class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                @else
+                                    <a class="nav-link" href="{{ route('login') }}"><i class="bi bi-box-arrow-in-right"></i>
+                                        Iniciar sesión para denunciar</a>
+                                @endif
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('citizen.public-statistics') }}"><i
                                         class="bi bi-bar-chart"></i> Estadísticas
                                     Públicas</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ route('profile-citizen') }}"><i
-                                        class="bi bi-person-circle"></i> Mi perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
-                                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                                    </button>
-                                </form>
-                            </li>
+                            @if ($estaAutenticado)
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="{{ route('profile-citizen') }}"><i
+                                            class="bi bi-person-circle"></i> Mi perfil</a>
+                                </li>
+                                <li class="nav-item">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
+                                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li class="nav-item mt-2">
+                                    <a class="btn btn-success w-100" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -72,8 +94,7 @@
                     <!-- Foto de Perfil -->
                     <div class="col-md-4 text-center mb-4">
                         <div class="profile-photo-container">
-                            <img id="profileImage" src="{{ asset('images/default-avatar.png') }}" alt="Foto de Perfil"
-                                class="profile-photo">
+                            <img id="profileImage" src="{{ $fotoPerfil }}" alt="Foto de Perfil" class="profile-photo">
                             <button type="button" class="btn btn-sm btn-primary btn-change-photo" data-bs-toggle="modal"
                                 data-bs-target="#changePhotoModal">
                                 <i class="bi bi-camera"></i>
@@ -92,14 +113,15 @@
                                         <label for="firstName" class="form-label">
                                             <i class="bi bi-person"></i> Nombre
                                         </label>
-                                        <input type="text" class="form-control" id="firstName" value="Juan" disabled>
+                                        <input type="text" class="form-control" id="firstName"
+                                            value="{{ $usuario?->nombre ?? 'Sin nombre registrado' }}" disabled>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="email" class="form-label">
                                             <i class="bi bi-envelope"></i> Correo Electrónico
                                         </label>
-                                        <input type="email" class="form-control" id="email" value="juan.perez@email.com"
-                                            disabled>
+                                        <input type="email" class="form-control" id="email"
+                                            value="{{ $usuario?->email ?? 'Sin correo registrado' }}" disabled>
                                     </div>
                                 </div>
 
@@ -108,18 +130,23 @@
                                         <label for="phone" class="form-label">
                                             <i class="bi bi-telephone"></i> Teléfono
                                         </label>
-                                        <input type="text" class="form-control" id="phone" value="+1 234 567 890"
-                                            disabled>
+                                        <input type="text" class="form-control" id="phone"
+                                            value="{{ $usuario?->telefono ?? 'Sin teléfono registrado' }}" disabled>
                                     </div>
                                 </div>
 
 
                         </div>
 
+                        <!-- Cambio de contraseña -->
                         <div class="button-group">
                             <button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                 data-bs-target="#changePasswordModal">
                                 <i class="bi bi-key"></i> Cambiar Contraseña
+                            </button>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                data-bs-target="#changePhoneModal">
+                                <i class="bi bi-telephone"></i> Cambiar Número de Teléfono
                             </button>
                         </div>
                         </form>
@@ -127,7 +154,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Modal: Cambiar Foto de Perfil -->
@@ -202,6 +228,39 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal: Cambiar Número de Teléfono -->
+    <div class="modal fade" id="changePhoneModal" tabindex="-1" aria-labelledby="changePhoneLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePhoneLabel">
+                        <i class="bi bi-telephone"></i> Cambiar Número de Teléfono
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="changePhoneForm" data-change-phone-url="{{ route('profile.change-phone') }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newPhone" class="form-label">Nuevo Número de Teléfono</label>
+                            <input type="text" class="form-control" id="newPhone" name="telefono" required
+                                maxlength="15" placeholder="Ej. 55551234">
+                            <small class="text-muted d-block mt-2">Solo números, máximo 15 dígitos.</small>
+                        </div>
+                        <div id="phoneMessage" class="alert" role="alert" style="display: none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Cambiar Número de Teléfono
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/citizen/profile.js') }}"></script>
 
 </body>
 

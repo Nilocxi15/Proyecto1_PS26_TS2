@@ -12,14 +12,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 </head>
 
 <body>
+    @php
+        $estaAutenticado = auth()->check();
+    @endphp
+
     <div class="navbar-container">
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#"><img src="{{ asset('icono-reciclaje.png') }}" alt="Logo" width="30"
-                        height="24" class="d-inline-block align-text-top"> Inicio</a>
+                        height="24" class="d-inline-block align-text-top"> EcoGestor Ciudadano</a>
+                @if (!$estaAutenticado)
+                    <a class="btn btn-success btn-sm d-none d-lg-inline-flex align-items-center me-2"
+                        href="{{ route('login') }}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar sesión
+                    </a>
+                @endif
                 <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,30 +45,45 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ route('home-citizen') }}"><i class="bi bi-house"></i>
+                                <a class="nav-link active" aria-current="page" href="{{ route('home-public') }}"><i
+                                        class="bi bi-house"></i>
                                     Inicio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('report-citizen') }}"><i
-                                        class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                <a class="nav-link" href="#rutas"><i class="bi bi-signpost"></i> Horarios y rutas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#puntos-verdes"><i class="bi bi-geo-alt"></i> Puntos verdes
+                                    cercanos</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('citizen.public-statistics') }}"><i
-                                        class="bi bi-bar-chart"></i> Estadísticas
-                                    Públicas</a>
+                                        class="bi bi-bar-chart"></i> Estadísticas públicas</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('profile-citizen') }}"><i
-                                        class="bi bi-person-circle"></i> Mi perfil</a>
-                            </li>
-                            <li class="nav-item">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
-                                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
-                                    </button>
-                                </form>
-                            </li>
+                            @if ($estaAutenticado)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('report-citizen') }}"><i
+                                            class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('profile-citizen') }}"><i
+                                            class="bi bi-person-circle"></i> Mi perfil</a>
+                                </li>
+                                <li class="nav-item">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="nav-link border-0 bg-transparent w-100 text-start">
+                                            <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            @else
+                                <li class="nav-item mt-2">
+                                    <a class="btn btn-success w-100" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -65,7 +92,7 @@
     </div>
 
     <div class="body-content">
-        <h1><i class="bi bi-calendar-event"></i> Horarios y Rutas de Recolección</h1>
+        <h2 id="rutas"><i class="bi bi-calendar-event"></i> Consulta de horarios y rutas de recolección</h2>
         <section class="schedule-tools mb-3">
             <div class="row g-3 align-items-end">
                 <div class="col-12 col-lg-6">
@@ -86,16 +113,16 @@
                         <option value="Jueves">Jueves</option>
                         <option value="Viernes">Viernes</option>
                         <option value="Sábado">Sábado</option>
+                        <option value="Domingo">Domingo</option>
                     </select>
                 </div>
                 <div class="col-12 col-md-6 col-lg-3">
                     <label for="wasteTypeFilter" class="form-label mb-1">Filtrar por residuo</label>
                     <select id="wasteTypeFilter" class="form-select">
                         <option value="">Todos los tipos</option>
-                        <option value="Orgánico">Orgánico</option>
-                        <option value="Plástico">Plástico</option>
-                        <option value="Papel y cartón">Papel y cartón</option>
-                        <option value="Vidrio">Vidrio</option>
+                        <option value="Organico">Orgánico</option>
+                        <option value="Mixto">Mixto</option>
+                        <option value="Inorganico">Inorgánico</option>
                     </select>
                 </div>
             </div>
@@ -113,45 +140,86 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Zona Centro</td>
-                        <td>Orgánico</td>
-                        <td>08:00 AM</td>
-                        <td>12:00 PM</td>
-                        <td>Lunes</td>
-                    </tr>
-                    <tr>
-                        <td>Zona Norte</td>
-                        <td>Plástico</td>
-                        <td>02:00 PM</td>
-                        <td>06:00 PM</td>
-                        <td>Miércoles</td>
-                    </tr>
-                    <tr>
-                        <td>Zona Sur</td>
-                        <td>Papel y cartón</td>
-                        <td>08:00 AM</td>
-                        <td>12:00 PM</td>
-                        <td>Viernes</td>
-                    </tr>
-                    <tr>
-                        <td>Zona 5</td>
-                        <td>Vidrio</td>
-                        <td>01:00 PM</td>
-                        <td>04:00 PM</td>
-                        <td>Martes</td>
-                    </tr>
+                    @foreach (($horarios ?? collect()) as $horario)
+                        <tr>
+                            <td>{{ $horario['ruta'] ?? 'Ruta sin nombre' }}</td>
+                            <td>{{ $horario['tipo_residuo'] ?? 'Sin definir' }}</td>
+                            <td>{{ $horario['hora_inicio'] ?? '--:--' }}</td>
+                            <td>{{ $horario['hora_fin'] ?? '--:--' }}</td>
+                            <td>{{ $horario['dia'] ?? 'Sin definir' }}</td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
             <p id="emptyState" class="empty-state d-none mb-0">No hay rutas que coincidan con los filtros aplicados.</p>
+
+            <div id="tablePagination" class="table-pagination mt-3" aria-label="Paginación de horarios">
+                <button type="button" id="prevPageBtn" class="btn btn-outline-secondary btn-sm">Anterior</button>
+                <span id="pageInfo" class="page-info">Página 1 de 1</span>
+                <button type="button" id="nextPageBtn" class="btn btn-outline-secondary btn-sm">Siguiente</button>
+            </div>
+
+            <div class="map-tools mb-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                    <input type="text" id="mapAddressInput" class="form-control"
+                        placeholder="Buscar direccion o zona...">
+                    <button type="button" id="mapSearchBtn" class="btn btn-primary">Buscar</button>
+                    <button type="button" id="myLocationBtn" class="btn btn-outline-primary">Mi ubicación</button>
+                </div>
+                <small id="mapSearchMessage" class="text-muted d-block mt-2"></small>
+            </div>
+
+            <div class="map-wrapper">
+                <div id="routesMap"></div>
+            </div>
         </div>
 
-        <p>Espacio para mapa</p>
+        <section id="puntos-verdes" class="mt-4">
+            <h2><i class="bi bi-tree"></i> Consulta de puntos verdes cercanos</h2>
+            <p class="mb-2">Mapa de rutas de recoleccion y puntos de parada estimados.</p>
 
-        <h1><i class="bi bi-tree"></i> Puntos Verdes Cercanos</h1>
+            <div class="map-tools mb-3">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-geo"></i></span>
+                    <input type="text" id="greenMapAddressInput" class="form-control"
+                        placeholder="Buscar direccion para puntos verdes...">
+                    <button type="button" id="greenMapSearchBtn" class="btn btn-primary">Buscar</button>
+                    <button type="button" id="greenMyLocationBtn" class="btn btn-outline-primary">Mi ubicación</button>
+                </div>
+                <small id="greenMapSearchMessage" class="text-muted d-block mt-2"></small>
+            </div>
 
-        <p>Espacio para mapa</p>
+            <div class="map-wrapper">
+                <div id="greenPointsMap"></div>
+            </div>
+        </section>
+
+        <section class="mt-4">
+            <h2><i class="bi bi-bar-chart"></i> Visualización de estadísticas públicas</h2>
+            <p>
+                <a class="btn btn-outline-primary" href="{{ route('citizen.public-statistics') }}">
+                    Ver estadísticas públicas
+                </a>
+            </p>
+        </section>
+
+        @if ($estaAutenticado)
+            <section class="mt-4">
+                <h2><i class="bi bi-file-earmark-medical"></i> Gestión de denuncias ciudadanas</h2>
+                <p>Desde reportes puedes crear denuncias de basureros clandestinos y dar seguimiento a tus reportes.</p>
+                <a class="btn btn-outline-success" href="{{ route('report-citizen') }}">Ir a reportes y seguimiento</a>
+            </section>
+        @endif
     </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script>
+        window.citizenRoutes = @json($mapRoutes ?? []);
+        window.greenPoints = @json($greenPoints ?? []);
+    </script>
+    <script src="{{ asset('js/citizen/home.js') }}"></script>
 
 </body>
 

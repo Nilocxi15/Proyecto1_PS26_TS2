@@ -163,6 +163,34 @@
 }
 
 /* Responsive */
+.map-tools {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.report-map-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#reportMap {
+    width: 100%;
+    min-height: 420px;
+    border-radius: 12px;
+    border: 1px solid #d0d7de;
+}
+
+/* Estilos para habilitar scroll en modal porque con el de bootstrap no funciona >:( */
+.modal-dialog-scrollable .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.modal-dialog.modal-xl .modal-body {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
 @media (max-width: 768px) {
     .reports-section {
         padding: 15px;
@@ -179,5 +207,9 @@
     .btn-sm {
         padding: 0.4rem 0.6rem;
         font-size: 0.75rem;
+    }
+
+    #reportMap {
+        min-height: 320px;
     }
 }

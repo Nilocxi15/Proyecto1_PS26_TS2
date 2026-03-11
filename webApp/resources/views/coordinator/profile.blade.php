@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('icono-reciclaje.png') }}">
+    <link rel="stylesheet" href="{{ asset('css/coordinator/profile.css') }}">
     <title>Mi perfil</title>
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -14,6 +16,10 @@
 </head>
 
 <body>
+    @php
+        $usuario = auth()->user();
+        $fotoPerfil = $usuario?->foto_perfil ? asset($usuario->foto_perfil) : asset('images/default-avatar.png');
+    @endphp
     <div class="navbar-container">
         <nav class="navbar bg-body-tertiary fixed-top">
             <div class="container-fluid">
@@ -68,6 +74,182 @@
             </div>
         </nav>
     </div>
+
+    <div class="body-content">
+        <div class="container">
+            <!-- Sección de Perfil -->
+            <div class="profile-section">
+                <div class="row">
+                    <!-- Foto de Perfil -->
+                    <div class="col-md-4 text-center mb-4">
+                        <div class="profile-photo-container">
+                            <img id="profileImage" src="{{ $fotoPerfil }}" alt="Foto de Perfil" class="profile-photo">
+                            <button type="button" class="btn btn-sm btn-primary btn-change-photo" data-bs-toggle="modal"
+                                data-bs-target="#changePhotoModal">
+                                <i class="bi bi-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Datos del Usuario -->
+                    <div class="col-md-8">
+                        <div class="user-data-section">
+                            <h2 class="mb-4"><i class="bi bi-person-circle"></i> Mi Perfil</h2>
+
+                            <form id="userProfileForm" class="needs-validation" novalidate>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">
+                                            <i class="bi bi-person"></i> Nombre
+                                        </label>
+                                        <input type="text" class="form-control" id="firstName"
+                                            value="{{ $usuario?->nombre ?? 'Sin nombre registrado' }}" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">
+                                            <i class="bi bi-envelope"></i> Correo Electrónico
+                                        </label>
+                                        <input type="email" class="form-control" id="email"
+                                            value="{{ $usuario?->email ?? 'Sin correo registrado' }}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">
+                                            <i class="bi bi-telephone"></i> Teléfono
+                                        </label>
+                                        <input type="text" class="form-control" id="phone"
+                                            value="{{ $usuario?->telefono ?? 'Sin teléfono registrado' }}" disabled>
+                                    </div>
+                                </div>
+
+
+                        </div>
+
+                        <!-- Cambio de contraseña -->
+                        <div class="button-group">
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#changePasswordModal">
+                                <i class="bi bi-key"></i> Cambiar Contraseña
+                            </button>
+                            <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                data-bs-target="#changePhoneModal">
+                                <i class="bi bi-telephone"></i> Cambiar Número de Teléfono
+                            </button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Cambiar Foto de Perfil -->
+    <div class="modal fade" id="changePhotoModal" tabindex="-1" aria-labelledby="changePhotoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePhotoLabel">
+                        <i class="bi bi-camera"></i> Cambiar Foto de Perfil
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="changePhotoForm" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="photoInput" class="form-label">Seleccionar nueva foto</label>
+                            <input type="file" class="form-control" id="photoInput" accept="image/*" required>
+                            <small class="text-muted">Formatos permitidos: JPG, PNG (Máximo 5MB)</small>
+                        </div>
+                        <div id="photoPreview" class="text-center mb-3">
+                            <img id="previewImage" src="" alt="Vista previa" style="max-width: 200px; display: none;"
+                                class="img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Guardar Foto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Cambiar Contraseña -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordLabel">
+                        <i class="bi bi-key"></i> Cambiar Contraseña
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="changePasswordForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                            <input type="password" class="form-control" id="currentPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                            <small class="text-muted d-block mt-2">La contraseña debe tener al menos 8 caracteres,
+                                incluir mayúsculas, minúsculas y números.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <div id="passwordMessage" class="alert" role="alert" style="display: none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Cambiar Contraseña
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Cambiar Número de Teléfono -->
+    <div class="modal fade" id="changePhoneModal" tabindex="-1" aria-labelledby="changePhoneLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePhoneLabel">
+                        <i class="bi bi-telephone"></i> Cambiar Número de Teléfono
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="changePhoneForm" data-change-phone-url="{{ route('profile.change-phone') }}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="newPhone" class="form-label">Nuevo Número de Teléfono</label>
+                            <input type="text" class="form-control" id="newPhone" name="telefono" required
+                                maxlength="15" placeholder="Ej. 55551234">
+                            <small class="text-muted d-block mt-2">Solo números, máximo 15 dígitos.</small>
+                        </div>
+                        <div id="phoneMessage" class="alert" role="alert" style="display: none;"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Cambiar Número de Teléfono
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/coordinator/profile.js') }}"></script>
 </body>
 
 </html>
