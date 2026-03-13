@@ -7,6 +7,7 @@ use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\CitizenReportController;
 use App\Http\Controllers\Coordinator\IncidentManagementController;
 use App\Http\Controllers\Coordinator\RouteManagementController;
+use App\Http\Controllers\Coordinator\TruckManagementController;
 use App\Http\Controllers\Operator\ContainerManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -155,7 +156,23 @@ Route::middleware('role:2')->group(function () {
     // ---------------------------------------------------------------------------
     // Rutas para la gestión de camiones (Rol coordinador de rutas)
     // ---------------------------------------------------------------------------
-    Route::view('/coordinator/trucks', 'coordinator.trucks')->name('coordinator.trucks');
+    Route::get('/coordinator/trucks', [TruckManagementController::class, 'index'])
+        ->name('coordinator.trucks');
+
+    Route::post('/coordinator/trucks', [TruckManagementController::class, 'store'])
+        ->name('coordinator.trucks.store');
+
+    Route::post('/coordinator/trucks/assignments', [TruckManagementController::class, 'assignRoute'])
+        ->name('coordinator.trucks.assign-route');
+
+    Route::put('/coordinator/trucks/{camion}/driver', [TruckManagementController::class, 'updateDriver'])
+        ->name('coordinator.trucks.update-driver');
+
+    Route::put('/coordinator/trucks/{camion}/state', [TruckManagementController::class, 'updateState'])
+        ->name('coordinator.trucks.update-state');
+
+    Route::delete('/coordinator/trucks/{camion}', [TruckManagementController::class, 'destroy'])
+        ->name('coordinator.trucks.delete');
 
     // ---------------------------------------------------------------------------
     // Rutas para la gestión de proceso de recolección
