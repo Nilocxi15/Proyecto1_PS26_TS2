@@ -19,6 +19,9 @@
 <body>
     @php
         $estaAutenticado = auth()->check();
+        $usuario = auth()->user();
+        $esOperadorPuntoVerde = $estaAutenticado && (int) ($usuario?->id_role ?? 0) === 3;
+        $esCiudadano = $estaAutenticado && (int) ($usuario?->id_role ?? 0) === 4;
     @endphp
 
     <div class="navbar-container">
@@ -61,14 +64,26 @@
                                         class="bi bi-bar-chart"></i> Estadísticas públicas</a>
                             </li>
                             @if ($estaAutenticado)
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('report-citizen') }}"><i
-                                            class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('profile-citizen') }}"><i
-                                            class="bi bi-person-circle"></i> Mi perfil</a>
-                                </li>
+                                @if ($esCiudadano)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('report-citizen') }}"><i
+                                                class="bi bi-file-earmark-medical"></i> Reportes y denuncias</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('profile-citizen') }}"><i
+                                                class="bi bi-person-circle"></i> Mi perfil</a>
+                                    </li>
+                                @endif
+                                @if ($esOperadorPuntoVerde)
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('operator.containers') }}"><i
+                                                class="bi bi-trash"></i> Gestión de contenedores</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('profile-operator') }}"><i
+                                                class="bi bi-person-circle"></i> Mi perfil</a>
+                                    </li>
+                                @endif
                                 <li class="nav-item">
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
@@ -204,11 +219,19 @@
             </p>
         </section>
 
-        @if ($estaAutenticado)
+        @if ($esCiudadano)
             <section class="mt-4">
                 <h2><i class="bi bi-file-earmark-medical"></i> Gestión de denuncias ciudadanas</h2>
                 <p>Desde reportes puedes crear denuncias de basureros clandestinos y dar seguimiento a tus reportes.</p>
                 <a class="btn btn-outline-success" href="{{ route('report-citizen') }}">Ir a reportes y seguimiento</a>
+            </section>
+        @endif
+
+        @if ($esOperadorPuntoVerde)
+            <section class="mt-4">
+                <h2><i class="bi bi-trash"></i> Gestión operativa de puntos verdes</h2>
+                <p>Desde gestión de contenedores puedes revisar niveles de llenado y registrar solicitudes de vaciado.</p>
+                <a class="btn btn-outline-success" href="{{ route('operator.containers') }}">Ir a gestión de contenedores</a>
             </section>
         @endif
     </div>

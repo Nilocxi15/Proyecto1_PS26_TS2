@@ -4,9 +4,12 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\CitizenReportController;
+use App\Models\Contenedores;
 use App\Models\PuntosVerdes;
 use App\Models\Rutas;
 use App\Models\TiposMaterial;
+use App\Models\VaciadoContenedores;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 $normalizeLabel = function (?string $value, bool $titleCase = false): string {
@@ -262,15 +265,27 @@ Route::get('/citizen/public-statistics', function () {
 // Rutas para la página de inicio del operador de punto verde
 // ---------------------------------------------------------------------------
 Route::middleware('role:3')->group(function () {
-    Route::get('/operator/home', function () {
-        return view('operator.home');
-    })->name('home-operator');
-
-    // ---------------------------------------------------------------------------
-    // Rutas para la página de gestión de contenedores (Rol operador de punto verde)
-    // ---------------------------------------------------------------------------
     Route::get('/operator/containers', function () {
-        return view('operator.container');
+        $usuarioId = auth()->id();
+
+        $contenedores = Contenedores::query()
+            ->with('tipoMaterial:id_material,nombre')
+            ->whereHas('puntoVerde', function ($query) use ($usuarioId): void {
+                $query->where('id_encargado', $usuarioId);
+            })
+            ->orderBy('id_contenedor')
+            ->get();
+
+        $materiales = $contenedores
+            ->map(fn ($contenedor) => trim((string) optional($contenedor->tipoMaterial)->nombre))
+            ->filter(fn ($nombre) => $nombre !== '')
+            ->unique()
+            ->values();
+
+        return view('operator.container', [
+            'contenedores' => $contenedores,
+            'materiales' => $materiales,
+        ]);
     })->name('operator.containers');
 
     // ---------------------------------------------------------------------------
@@ -279,6 +294,36 @@ Route::middleware('role:3')->group(function () {
     Route::get('/operator/profile', function () {
         return view('operator.profile');
     })->name('profile-operator');
+
+    Route::post('/operator/containers/{contenedor}/empty-request', function (int $contenedor) {
+        $usuarioId = auth()->id();
+
+        $contenedorModel = Contenedores::query()
+            ->where('id_contenedor', $contenedor)
+            ->whereHas('puntoVerde', function ($query) use ($usuarioId): void {
+                $query->where('id_encargado', $usuarioId);
+            })
+            ->firstOrFail();
+
+        DB::transaction(function () use ($contenedorModel): void {
+            $porcentajeLlenado = (float) $contenedorModel->porcentaje_llenado;
+            $capacidadKg = (float) $contenedorModel->capacidad_kg;
+            $cantidadRetirada = round(($capacidadKg * $porcentajeLlenado) / 100, 2);
+
+            VaciadoContenedores::query()->create([
+                'id_contenedor' => $contenedorModel->id_contenedor,
+                'fecha' => now(),
+                'cantidad_retirada_kg' => $cantidadRetirada,
+            ]);
+
+            $contenedorModel->porcentaje_llenado = 0;
+            $contenedorModel->save();
+        });
+
+        return redirect()
+            ->route('operator.containers')
+            ->with('status', 'Solicitud de vaciado registrada correctamente.');
+    })->name('operator.containers.empty-request');
 });
 
 // ---------------------------------------------------------------------------

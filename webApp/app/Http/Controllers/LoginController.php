@@ -57,7 +57,7 @@ class LoginController extends Controller
         return match ($idRol) {
             1 => 'home-admin',
             2 => 'home-coordinator',
-            3 => 'home-operator',
+            3 => 'home-public',
             4 => 'home-citizen',
             5 => 'home-auditor',
             default => 'login',

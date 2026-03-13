@@ -139,9 +139,17 @@
                                             };
                                             $ubicacion = 'Sin ubicación';
                                             $descripcion = $denuncia->descripcion ?? 'Sin descripción';
+                                            $fotoUrl = null;
 
                                             if (str_contains($descripcion, ' | Ubicacion: ')) {
                                                 [$descripcion, $ubicacion] = explode(' | Ubicacion: ', $descripcion, 2);
+                                            }
+
+                                            if (!empty($denuncia->foto)) {
+                                                $fotoUrl = str_starts_with($denuncia->foto, 'http://') ||
+                                                    str_starts_with($denuncia->foto, 'https://')
+                                                    ? $denuncia->foto
+                                                    : asset('storage/' . ltrim($denuncia->foto, '/'));
                                             }
                                         @endphp
                                         <tr>
@@ -153,7 +161,19 @@
                                             <td><span class="badge {{ $badgeEstado }}">{{ $estado }}</span></td>
                                             <td>
                                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                                    data-bs-target="#viewReportModal">
+                                                    data-bs-target="#viewReportModal"
+                                                    data-report-id="{{ $denuncia->id_denuncia }}"
+                                                    data-report-fecha="{{ optional($denuncia->fecha)->format('d/m/Y') ?? 'Sin fecha' }}"
+                                                    data-report-ubicacion="{{ $ubicacion }}"
+                                                    data-report-descripcion="{{ $descripcion }}"
+                                                    data-report-tamano="{{ $denuncia->tamano }}"
+                                                    data-report-tamano-badge="{{ $badgeTamano }}"
+                                                    data-report-estado="{{ $estado }}"
+                                                    data-report-estado-badge="{{ $badgeEstado }}"
+                                                    data-report-foto="{{ $fotoUrl ?? '' }}"
+                                                    data-report-nombre="{{ $denuncia->nombre_denunciante ?? ($usuario?->nombre ?? 'Sin nombre') }}"
+                                                    data-report-telefono="{{ $denuncia->telefono ?? ($usuario?->telefono ?? 'Sin teléfono') }}"
+                                                    data-report-email="{{ $denuncia->email ?? ($usuario?->email ?? 'Sin email') }}">
                                                     <i class="bi bi-eye"></i>
                                                 </button>
                                             </td>
@@ -166,6 +186,11 @@
                                 </tbody>
                             </table>
                         </div>
+                        @if (($denuncias ?? null) && method_exists($denuncias, 'links'))
+                            <div class="d-flex justify-content-center mt-3">
+                                {{ $denuncias->onEachSide(1)->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -298,25 +323,26 @@
                 <div class="modal-body">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p><strong>Ubicación:</strong> Zona 3, Calle 5</p>
-                            <p><strong>Tamaño:</strong> <span class="badge bg-warning">Grande</span></p>
-                            <p><strong>Descripción:</strong> Basurero con residuos peligrosos</p>
+                            <p><strong>Ubicación:</strong> <span id="modalReportUbicacion">Sin ubicación</span></p>
+                            <p><strong>Tamaño:</strong> <span class="badge bg-secondary" id="modalReportTamano">Sin tamaño</span></p>
+                            <p><strong>Descripción:</strong> <span id="modalReportDescripcion">Sin descripción</span></p>
                         </div>
                         <div class="col-md-6">
-                            <p><strong>Estado:</strong> <span class="badge bg-success">Atendida</span></p>
-                            <p><strong>Fecha:</strong> 15/02/2026</p>
-                            <p><strong>ID:</strong> #DEN-001-2026</p>
+                            <p><strong>Estado:</strong> <span class="badge bg-secondary" id="modalReportEstado">Sin estado</span></p>
+                            <p><strong>Fecha:</strong> <span id="modalReportFecha">Sin fecha</span></p>
+                            <p><strong>ID:</strong> #<span id="modalReportId">-</span></p>
                         </div>
                     </div>
                     <div class="mb-3">
                         <h6>Foto del Lugar</h6>
-                        <img src="https://via.placeholder.com/400x300" class="img-fluid rounded" alt="Foto del lugar">
+                        <img src="https://via.placeholder.com/400x300?text=Sin+foto" class="img-fluid rounded"
+                            id="modalReportFoto" alt="Foto del lugar">
                     </div>
                     <div class="mb-3">
                         <h6>Datos del Denunciante</h6>
-                        <p><strong>Nombre:</strong> Juan Pérez</p>
-                        <p><strong>Teléfono:</strong> +502 1234 5678</p>
-                        <p><strong>Email:</strong> juan@example.com</p>
+                        <p><strong>Nombre:</strong> <span id="modalReportNombre">Sin nombre</span></p>
+                        <p><strong>Teléfono:</strong> <span id="modalReportTelefono">Sin teléfono</span></p>
+                        <p><strong>Email:</strong> <span id="modalReportEmail">Sin email</span></p>
                     </div>
                 </div>
                 <div class="modal-footer">

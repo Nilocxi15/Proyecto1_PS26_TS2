@@ -38,8 +38,8 @@
                     <div class="offcanvas-body">
                         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('home-operator') }}"><i class="bi bi-house"></i>
-                                    Inicio</a>
+                                <a class="nav-link" href="{{ route('home-public') }}"><i class="bi bi-house"></i>
+                                    Pantalla pública</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('operator.containers') }}"><i

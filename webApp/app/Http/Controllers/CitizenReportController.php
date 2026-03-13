@@ -33,11 +33,13 @@ class CitizenReportController extends Controller
             })
             ->orderByDesc('fecha')
             ->orderByDesc('id_denuncia')
-            ->get()
-            ->each(function ($denuncia): void {
+            ->paginate(10)
+            ->through(function ($denuncia) {
                 if (is_string($denuncia->fecha)) {
                     $denuncia->fecha = Carbon::parse($denuncia->fecha);
                 }
+
+                return $denuncia;
             });
 
         return view('citizen.reports', compact('denuncias'));
