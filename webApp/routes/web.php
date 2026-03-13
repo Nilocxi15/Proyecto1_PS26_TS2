@@ -5,10 +5,12 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\CitizenReportController;
 use App\Models\Contenedores;
+use App\Models\EntregasReciclaje;
 use App\Models\PuntosVerdes;
 use App\Models\Rutas;
 use App\Models\TiposMaterial;
 use App\Models\VaciadoContenedores;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -324,6 +326,57 @@ Route::middleware('role:3')->group(function () {
             ->route('operator.containers')
             ->with('status', 'Solicitud de vaciado registrada correctamente.');
     })->name('operator.containers.empty-request');
+
+    Route::post('/operator/containers/{contenedor}/deliveries', function (Request $request, int $contenedor) {
+        $usuarioId = auth()->id();
+
+        $validated = $request->validate([
+            'cantidad_kg' => ['required', 'numeric', 'gt:0'],
+        ], [
+            'cantidad_kg.required' => 'Debes ingresar una cantidad en kilogramos.',
+            'cantidad_kg.numeric' => 'La cantidad debe ser numérica.',
+            'cantidad_kg.gt' => 'La cantidad debe ser mayor que 0.',
+        ]);
+
+        $contenedorModel = Contenedores::query()
+            ->where('id_contenedor', $contenedor)
+            ->whereHas('puntoVerde', function ($query) use ($usuarioId): void {
+                $query->where('id_encargado', $usuarioId);
+            })
+            ->firstOrFail();
+
+        $cantidadKg = round((float) $validated['cantidad_kg'], 2);
+        $capacidadKg = (float) $contenedorModel->capacidad_kg;
+        $porcentajeActual = (float) $contenedorModel->porcentaje_llenado;
+        $cantidadActualKg = round(($capacidadKg * $porcentajeActual) / 100, 2);
+        $capacidadDisponibleKg = round(max($capacidadKg - $cantidadActualKg, 0), 2);
+
+        if ($cantidadKg > $capacidadDisponibleKg) {
+            return redirect()
+                ->route('operator.containers')
+                ->with('error', 'La cantidad supera la capacidad disponible del contenedor.')
+                ->withInput();
+        }
+
+        DB::transaction(function () use ($contenedorModel, $cantidadKg, $capacidadKg, $cantidadActualKg): void {
+            EntregasReciclaje::query()->create([
+                'id_contenedor' => $contenedorModel->id_contenedor,
+                'ciudadano_codigo' => null,
+                'cantidad_kg' => $cantidadKg,
+                'fecha' => now(),
+            ]);
+
+            $nuevoTotalKg = $cantidadActualKg + $cantidadKg;
+            $contenedorModel->porcentaje_llenado = $capacidadKg > 0
+                ? round(($nuevoTotalKg / $capacidadKg) * 100, 2)
+                : 0;
+            $contenedorModel->save();
+        });
+
+        return redirect()
+            ->route('operator.containers')
+            ->with('status', 'Entrega de material registrada correctamente.');
+    })->name('operator.containers.deliveries.store');
 });
 
 // ---------------------------------------------------------------------------

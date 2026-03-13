@@ -71,6 +71,18 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
 
         <section class="filter-bar mb-3">
             <div class="row g-3 align-items-end">
@@ -104,7 +116,7 @@
                         <th>Material</th>
                         <th>Capacidad</th>
                         <th>Porcentaje de llenado</th>
-                        <th>Acción</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,13 +143,25 @@
                             <td>{{ number_format((float) ($contenedor->capacidad_kg ?? 0), 2) }} Kg</td>
                             <td class="fill-cell" data-fill="{{ $llenado }}"><span class="badge {{ $badgeClass }}">{{ $llenadoRedondeado }}%</span></td>
                             <td>
-                                <form method="POST"
+                                <form method="POST" class="mb-2"
                                     action="{{ route('operator.containers.empty-request', ['contenedor' => $contenedor->id_contenedor]) }}">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-dark request-empty-btn"
                                         onclick="return confirm('¿Confirmas solicitar vaciado para este contenedor?');">
                                         <i class="bi bi-plus-circle"></i> Solicitar vaciado
                                     </button>
+                                </form>
+
+                                <form method="POST"
+                                    action="{{ route('operator.containers.deliveries.store', ['contenedor' => $contenedor->id_contenedor]) }}">
+                                    @csrf
+                                    <div class="input-group input-group-sm">
+                                        <input type="number" name="cantidad_kg" class="form-control"
+                                            min="0.01" step="0.01" placeholder="Kg" required>
+                                        <button type="submit" class="btn btn-outline-success">
+                                            <i class="bi bi-box-seam"></i> Registrar entrega
+                                        </button>
+                                    </div>
                                 </form>
                             </td>
                         </tr>
