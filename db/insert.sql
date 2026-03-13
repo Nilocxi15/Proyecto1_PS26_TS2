@@ -483,7 +483,7 @@ VALUES
     (
         'Juan Perez',
         '55590001',
-        '[juan@email.com](mailto:juan@email.com)',
+        'juan@email.com',
         'Basura cerca parque central',
         14.8350,
         -91.5175,
@@ -494,7 +494,7 @@ VALUES
     (
         'Ana Lopez',
         '55590002',
-        '[ana@email.com](mailto:ana@email.com)',
+        'ana@email.com',
         'Basurero clandestino',
         14.8460,
         -91.5235,
@@ -505,7 +505,7 @@ VALUES
     (
         'Carlos Diaz',
         '55590003',
-        '[carlos@email.com](mailto:carlos@email.com)',
+        'carlos@email.com',
         'Desechos en terreno baldío',
         14.8290,
         -91.5200,
@@ -516,7 +516,7 @@ VALUES
     (
         'Maria Gomez',
         '55590004',
-        '[maria@email.com](mailto:maria@email.com)',
+        'maria@email.com',
         'Basura cerca escuela',
         14.8230,
         -91.5120,
@@ -527,7 +527,7 @@ VALUES
     (
         'Luis Morales',
         '55590005',
-        '[luis@email.com](mailto:luis@email.com)',
+        'luis@email.com',
         'Restos construcción',
         14.8280,
         -91.5190,
@@ -538,7 +538,7 @@ VALUES
     (
         'Pedro Ramirez',
         '55590006',
-        '[pedro@email.com](mailto:pedro@email.com)',
+        'pedro@email.com',
         'Bolsa basura abandonada',
         14.8340,
         -91.5205,
@@ -549,7 +549,7 @@ VALUES
     (
         'Laura Castillo',
         '55590007',
-        '[laura@email.com](mailto:laura@email.com)',
+        'laura@email.com',
         'Basura en parque',
         14.8335,
         -91.5160,
@@ -560,7 +560,7 @@ VALUES
     (
         'Jose Mendez',
         '55590008',
-        '[jose@email.com](mailto:jose@email.com)',
+        'jose@email.com',
         'Desechos domésticos',
         14.8320,
         -91.5185,
@@ -571,7 +571,7 @@ VALUES
     (
         'Sandra Ruiz',
         '55590009',
-        '[sandra@email.com](mailto:sandra@email.com)',
+        'sandra@email.com',
         'Basura cerca escuela',
         14.8365,
         -91.5200,
@@ -582,7 +582,7 @@ VALUES
     (
         'Miguel Torres',
         '55590010',
-        '[miguel@email.com](mailto:miguel@email.com)',
+        'miguel@email.com',
         'Contaminacion barranco',
         14.8210,
         -91.5150,
@@ -593,7 +593,7 @@ VALUES
     (
         'Carmen Soto',
         '55590011',
-        '[carmen@email.com](mailto:carmen@email.com)',
+        'carmen@email.com',
         'Basura acumulada',
         14.8330,
         -91.5170,
@@ -604,7 +604,7 @@ VALUES
     (
         'David Rojas',
         '55590012',
-        '[david@email.com](mailto:david@email.com)',
+        'david@email.com',
         'Desechos organicos',
         14.8355,
         -91.5195,
@@ -615,7 +615,7 @@ VALUES
     (
         'Rosa Fuentes',
         '55590013',
-        '[rosa@email.com](mailto:rosa@email.com)',
+        'rosa@email.com',
         'Basura calle principal',
         14.8370,
         -91.5185,
@@ -626,7 +626,7 @@ VALUES
     (
         'Jorge Leon',
         '55590014',
-        '[jorge@email.com](mailto:jorge@email.com)',
+        'jorge@email.com',
         'Escombros abandonados',
         14.8205,
         -91.5110,
@@ -637,7 +637,7 @@ VALUES
     (
         'Patricia Vega',
         '55590015',
-        '[patricia@email.com](mailto:patricia@email.com)',
+        'patricia@email.com',
         'Basura cerca mercado',
         14.8305,
         -91.5210,
@@ -648,7 +648,7 @@ VALUES
     (
         'Andres Cruz',
         '55590016',
-        '[andres@email.com](mailto:andres@email.com)',
+        'andres@email.com',
         'Residuos industriales',
         14.8560,
         -91.5340,
@@ -659,7 +659,7 @@ VALUES
     (
         'Daniela Ortiz',
         '55590017',
-        '[daniela@email.com](mailto:daniela@email.com)',
+        'daniela@email.com',
         'Basura parada bus',
         14.8330,
         -91.5165,
@@ -670,7 +670,7 @@ VALUES
     (
         'Fernando Pineda',
         '55590018',
-        '[fernando@email.com](mailto:fernando@email.com)',
+        'fernando@email.com',
         'Desechos parque infantil',
         14.8360,
         -91.5190,
