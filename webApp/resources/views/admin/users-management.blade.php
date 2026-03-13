@@ -56,6 +56,20 @@
                                 <a class="nav-link" href="{{ route('admin.user-profile') }}"><i
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li class="ps-2 py-0"><small class="text-muted fw-semibold">Vistas de otros roles</small></li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home-coordinator') }}"><i class="bi bi-map-fill"></i> Coordinador de Rutas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('operator.containers') }}"><i class="bi bi-recycle"></i> Operador Punto Verde</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home-auditor') }}"><i class="bi bi-clipboard-data"></i> Auditor</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('home-citizen') }}"><i class="bi bi-people-fill"></i> Ciudadano</a>
+                            </li>
                             <li class="nav-item">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

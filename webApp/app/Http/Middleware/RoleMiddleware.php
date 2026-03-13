@@ -18,6 +18,11 @@ class RoleMiddleware
 
         $usuario = Auth::user();
 
+        // El Administrador Municipal (role 1) tiene acceso a todas las vistas.
+        if ((int) $usuario->id_role === 1) {
+            return $next($request);
+        }
+
         if (!in_array((string) $usuario->id_role, $roles, true)) {
             Auth::logout();
             $request->session()->invalidate();

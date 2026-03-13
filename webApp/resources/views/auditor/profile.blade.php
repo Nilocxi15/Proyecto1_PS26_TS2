@@ -45,6 +45,11 @@
                                 <a class="nav-link active" aria-current="page" href="{{ route('profile-auditor') }}"><i
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
+                            @if(auth()->check() && (int) auth()->user()->id_role === 1)
+                            <li class="nav-item">
+                                <a class="nav-link fw-semibold" href="{{ route('home-admin') }}"><i class="bi bi-shield-fill"></i> Panel de Administrador</a>
+                            </li>
+                            @endif
                             <li class="nav-item">
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf

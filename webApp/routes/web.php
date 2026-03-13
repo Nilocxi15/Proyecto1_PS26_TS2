@@ -6,6 +6,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\CitizenReportController;
 use App\Http\Controllers\Coordinator\IncidentManagementController;
+use App\Http\Controllers\Coordinator\CollectionProcessController;
 use App\Http\Controllers\Coordinator\RouteManagementController;
 use App\Http\Controllers\Coordinator\TruckManagementController;
 use App\Http\Controllers\Operator\ContainerManagementController;
@@ -176,8 +177,26 @@ Route::middleware('role:2')->group(function () {
 
     // ---------------------------------------------------------------------------
     // Rutas para la gestión de proceso de recolección
-    Route::view('/coordinator/collection-process', 'coordinator.collection-process')
+    Route::get('/coordinator/collection-process', [CollectionProcessController::class, 'index'])
         ->name('coordinator.collection-process');
+
+    Route::put('/coordinator/collection-process/{programacion}/state', [CollectionProcessController::class, 'updateState'])
+        ->name('coordinator.collection-process.update-state');
+
+    Route::put('/coordinator/collection-process/{programacion}/start-time', [CollectionProcessController::class, 'setStartTime'])
+        ->name('coordinator.collection-process.set-start-time');
+
+    Route::put('/coordinator/collection-process/{programacion}/end-time', [CollectionProcessController::class, 'setEndTime'])
+        ->name('coordinator.collection-process.set-end-time');
+
+    Route::put('/coordinator/collection-process/{programacion}/waste', [CollectionProcessController::class, 'setCollectedWaste'])
+        ->name('coordinator.collection-process.set-waste');
+
+    Route::put('/coordinator/collection-process/{programacion}/observations', [CollectionProcessController::class, 'setObservations'])
+        ->name('coordinator.collection-process.set-observations');
+
+    Route::post('/coordinator/collection-process/{programacion}/incidents', [CollectionProcessController::class, 'storeIncident'])
+        ->name('coordinator.collection-process.store-incident');
 });
 
 // ---------------------------------------------------------------------------
