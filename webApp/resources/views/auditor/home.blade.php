@@ -40,6 +40,10 @@
                                 <a class="nav-link" href="{{ route('profile-auditor') }}"><i
                                         class="bi bi-person-circle"></i> Mi perfil</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('auditor.reports') }}"><i
+                                        class="bi bi-bar-chart"></i> Reportes y Estadísticas</a>
+                            </li>
                             @if(auth()->check() && (int) auth()->user()->id_role === 1)
                             <li class="nav-item">
                                 <a class="nav-link fw-semibold" href="{{ route('home-admin') }}"><i class="bi bi-shield-fill"></i> Panel de Administrador</a>

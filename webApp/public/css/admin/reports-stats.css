@@ -1,0 +1,13 @@
+body {
+    background-color: #f8f9fa;
+    margin-top: 70px;
+}
+
+.metric-card {
+    border-left: 4px solid #198754;
+}
+
+.small-muted {
+    font-size: .875rem;
+    color: #6c757d;
+}

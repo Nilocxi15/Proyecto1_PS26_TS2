@@ -1,0 +1,20 @@
+body {
+    background-color: #f8f9fa;
+    margin-top: 70px;
+}
+
+#map-overview {
+    height: 380px;
+    border-radius: .375rem;
+}
+
+#map-create,
+#map-edit {
+    height: 280px;
+    border-radius: .375rem;
+}
+
+.table-vertical-align td,
+.table-vertical-align th {
+    vertical-align: middle;
+}

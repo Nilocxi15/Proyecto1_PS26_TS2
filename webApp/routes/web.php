@@ -10,6 +10,9 @@ use App\Http\Controllers\Coordinator\CollectionProcessController;
 use App\Http\Controllers\Coordinator\RouteManagementController;
 use App\Http\Controllers\Coordinator\TruckManagementController;
 use App\Http\Controllers\Operator\ContainerManagementController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\SystemSettingsController;
+use App\Http\Controllers\Admin\ReportsStatsController;
 use Illuminate\Support\Facades\Route;
 
 // ---------------------------------------------------------------------------
@@ -86,17 +89,37 @@ Route::middleware('role:1')->group(function () {
     // ---------------------------------------------------------------------------
     // Rutas para la página de gestión de usuarios (Rol administrador)
     // ---------------------------------------------------------------------------
-    Route::view('/admin/users', 'admin.users-management')->name('admin.users');
+    Route::get('/admin/users', [UserManagementController::class, 'index'])->name('admin.users');
+    Route::post('/admin/users', [UserManagementController::class, 'store'])->name('admin.users.store');
+    Route::put('/admin/users/{usuario}', [UserManagementController::class, 'update'])->name('admin.users.update');
+    Route::patch('/admin/users/{usuario}/status', [UserManagementController::class, 'updateStatus'])->name('admin.users.update-status');
+    Route::delete('/admin/users/{usuario}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
 
     // ---------------------------------------------------------------------------
     // Rutas para la página de gestión de reportes (Rol administrador)
     // ---------------------------------------------------------------------------
-    Route::view('/admin/reports', 'admin.reports-stats')->name('admin.reports');
+    Route::get('/admin/reports', [ReportsStatsController::class, 'index'])->name('admin.reports');
+    Route::get('/admin/reports/export', [ReportsStatsController::class, 'exportCsv'])->name('admin.reports.export');
 
     // ---------------------------------------------------------------------------
     // Rutas para la página de configuración del sistema (Rol administrador)
     // ---------------------------------------------------------------------------
-    Route::view('/admin/system-settings', 'admin.system-settings')->name('admin.system-settings');
+    Route::get('/admin/system-settings', [SystemSettingsController::class, 'index'])->name('admin.system-settings');
+
+    // Roles
+    Route::post('/admin/system-settings/roles', [SystemSettingsController::class, 'storeRole'])->name('admin.settings.roles.store');
+    Route::put('/admin/system-settings/roles/{role}', [SystemSettingsController::class, 'updateRole'])->name('admin.settings.roles.update');
+    Route::delete('/admin/system-settings/roles/{role}', [SystemSettingsController::class, 'destroyRole'])->name('admin.settings.roles.destroy');
+
+    // Tipos de material
+    Route::post('/admin/system-settings/materiales', [SystemSettingsController::class, 'storeMaterial'])->name('admin.settings.materiales.store');
+    Route::put('/admin/system-settings/materiales/{material}', [SystemSettingsController::class, 'updateMaterial'])->name('admin.settings.materiales.update');
+    Route::delete('/admin/system-settings/materiales/{material}', [SystemSettingsController::class, 'destroyMaterial'])->name('admin.settings.materiales.destroy');
+
+    // Puntos verdes
+    Route::post('/admin/system-settings/puntos-verdes', [SystemSettingsController::class, 'storePuntoVerde'])->name('admin.settings.puntos.store');
+    Route::put('/admin/system-settings/puntos-verdes/{puntoVerde}', [SystemSettingsController::class, 'updatePuntoVerde'])->name('admin.settings.puntos.update');
+    Route::delete('/admin/system-settings/puntos-verdes/{puntoVerde}', [SystemSettingsController::class, 'destroyPuntoVerde'])->name('admin.settings.puntos.destroy');
 
     // ---------------------------------------------------------------------------
     // Rutas para ver perfil de usuario (Rol administrador)
@@ -109,6 +132,8 @@ Route::middleware('role:1')->group(function () {
 // ---------------------------------------------------------------------------
 Route::middleware('role:5')->group(function () {
     Route::view('/auditor/home', 'auditor.home')->name('home-auditor');
+    Route::get('/auditor/reports', [ReportsStatsController::class, 'auditorIndex'])->name('auditor.reports');
+    Route::get('/auditor/reports/export', [ReportsStatsController::class, 'exportCsv'])->name('auditor.reports.export');
 
     // ---------------------------------------------------------------------------
     // Rutas para la página del perfil del auditor
