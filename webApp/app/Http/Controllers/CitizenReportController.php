@@ -53,13 +53,17 @@ class CitizenReportController extends Controller
             'ubicacion' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string', 'max:1500'],
             'tamano' => ['required', 'in:Pequeno,Mediano,Grande'],
-            'fecha' => ['required', 'date'],
+            'fecha' => ['required', 'date_format:Y-m-d\\TH:i'],
             'latitud' => ['nullable', 'numeric', 'between:-90,90'],
             'longitud' => ['nullable', 'numeric', 'between:-180,180'],
             'foto' => ['nullable', 'image', 'max:5120'],
         ], [
             'tamano.in' => 'El tamano debe ser Pequeno, Mediano o Grande.',
+            'fecha.date_format' => 'La fecha debe incluir dia y hora.',
         ]);
+
+        $fechaDenuncia = Carbon::createFromFormat('Y-m-d\\TH:i', $validated['fecha'])
+            ->format('Y-m-d H:i:s');
 
         $fotoPath = null;
         $cloudinaryPublicId = null;
@@ -92,7 +96,7 @@ class CitizenReportController extends Controller
                 'longitud' => $validated['longitud'] ?? null,
                 'tamano' => $validated['tamano'],
                 'foto' => $fotoPath,
-                'fecha' => $validated['fecha'],
+                'fecha' => $fechaDenuncia,
                 'estado' => 'Recibida',
             ]);
 

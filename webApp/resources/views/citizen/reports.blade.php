@@ -154,7 +154,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $denuncia->id_denuncia }}</td>
-                                            <td>{{ optional($denuncia->fecha)->format('d/m/Y') }}</td>
+                                            <td>{{ optional($denuncia->fecha)->format('d/m/Y H:i') }}</td>
                                             <td>{{ $ubicacion }}</td>
                                             <td>{{ $descripcion }}</td>
                                             <td><span class="badge {{ $badgeTamano }}">{{ $denuncia->tamano }}</span></td>
@@ -163,7 +163,7 @@
                                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal"
                                                     data-bs-target="#viewReportModal"
                                                     data-report-id="{{ $denuncia->id_denuncia }}"
-                                                    data-report-fecha="{{ optional($denuncia->fecha)->format('d/m/Y') ?? 'Sin fecha' }}"
+                                                    data-report-fecha="{{ optional($denuncia->fecha)->format('d/m/Y H:i') ?? 'Sin fecha' }}"
                                                     data-report-ubicacion="{{ $ubicacion }}"
                                                     data-report-descripcion="{{ $descripcion }}"
                                                     data-report-tamano="{{ $denuncia->tamano }}"
@@ -292,9 +292,22 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="complaintDate">Fecha de la Denuncia</span>
-                        <input type="date" class="form-control" name="fecha" aria-label="Fecha de denuncia"
-                            aria-describedby="complaintDate" value="{{ old('fecha', now()->toDateString()) }}" required>
+                        <span class="input-group-text" id="complaintDate">Fecha y hora de la Denuncia</span>
+                        @php
+                            $fechaOld = old('fecha');
+
+                            if (!empty($fechaOld)) {
+                                try {
+                                    $fechaValor = \Illuminate\Support\Carbon::parse($fechaOld)->format('Y-m-d\\TH:i');
+                                } catch (\Throwable $exception) {
+                                    $fechaValor = now()->format('Y-m-d\\TH:i');
+                                }
+                            } else {
+                                $fechaValor = now()->format('Y-m-d\\TH:i');
+                            }
+                        @endphp
+                        <input type="datetime-local" class="form-control" name="fecha" aria-label="Fecha y hora de denuncia"
+                            aria-describedby="complaintDate" value="{{ $fechaValor }}" required>
                     </div>
 
                     @if ($errors->any())

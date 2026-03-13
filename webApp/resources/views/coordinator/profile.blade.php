@@ -51,9 +51,13 @@
                                     Gestión de Camiones</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="{{ route('coordinator.collection-process') }}"><i
+                                        class="bi bi-collection"></i> Proceso de Recolección</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ route('coordinator.incidents') }}"><i
                                         class="bi bi-exclamation-triangle"></i>
-                                    Incidentes</a>
+                                    Gestión de Denuncias Ciudadanas</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page"

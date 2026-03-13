@@ -4,8 +4,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\RegistroController;
 use App\Http\Controllers\CitizenReportController;
+use App\Models\Denuncias;
 use App\Models\Contenedores;
 use App\Models\EntregasReciclaje;
+use App\Models\HistorialEstadoDenuncia;
 use App\Models\PuntosVerdes;
 use App\Models\Rutas;
 use App\Models\TiposMaterial;
@@ -13,6 +15,7 @@ use App\Models\VaciadoContenedores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 $normalizeLabel = function (?string $value, bool $titleCase = false): string {
     $text = trim((string) ($value ?? ''));
@@ -444,8 +447,82 @@ Route::middleware('role:2')->group(function () {
     // Rutas para la página de incidentes del coordinador de rutas
     // ---------------------------------------------------------------------------
     Route::get('/coordinator/incidents', function () {
-        return view('coordinator.incidents');
+        $denuncias = Denuncias::query()
+            ->orderByDesc('fecha')
+            ->orderByDesc('id_denuncia')
+            ->get();
+
+        $estadosDenuncia = [
+            'recibida' => 'Recibida',
+            'en_revision' => 'En revisión',
+            'asignada' => 'Asignada',
+            'en_atencion' => 'En atención',
+            'atendida' => 'Atendida',
+            'cerrada' => 'Cerrada',
+        ];
+
+        return view('coordinator.incidents', [
+            'denuncias' => $denuncias,
+            'estadosDenuncia' => $estadosDenuncia,
+        ]);
     })->name('coordinator.incidents');
+
+    Route::post('/coordinator/incidents/{denuncia}/status', function (Request $request, int $denuncia) {
+        $estadosPermitidos = [
+            'recibida',
+            'en_revision',
+            'asignada',
+            'en_atencion',
+            'atendida',
+            'cerrada',
+        ];
+
+        $normalizeStatusKey = function ($value): string {
+            $normalized = mb_strtolower(trim((string) $value), 'UTF-8');
+
+            return match ($normalized) {
+                'recibida' => 'recibida',
+                'en revision', 'en_revision', 'en revisión' => 'en_revision',
+                'asignada', 'asingada' => 'asignada',
+                'en atencion', 'en_atencion', 'en atención' => 'en_atencion',
+                'atendida' => 'atendida',
+                'cerrada' => 'cerrada',
+                default => 'recibida',
+            };
+        };
+
+        $validated = $request->validate([
+            'estado' => ['required', 'string', Rule::in($estadosPermitidos)],
+        ]);
+
+        $denunciaModel = Denuncias::query()->findOrFail($denuncia);
+
+        $estadoActual = $normalizeStatusKey($denunciaModel->estado);
+        $indiceActual = array_search($estadoActual, $estadosPermitidos, true);
+        $indiceNuevo = array_search($validated['estado'], $estadosPermitidos, true);
+
+        if ($indiceActual !== false && $indiceNuevo !== false && $indiceNuevo < $indiceActual) {
+            return redirect()
+                ->route('coordinator.incidents')
+                ->withErrors(['estado' => 'No es posible regresar la denuncia a un estado anterior.']);
+        }
+
+        DB::transaction(function () use ($denunciaModel, $validated): void {
+            $denunciaModel->estado = $validated['estado'];
+            $denunciaModel->save();
+
+            HistorialEstadoDenuncia::query()->create([
+                'id_denuncia' => $denunciaModel->id_denuncia,
+                'estado' => $validated['estado'],
+                'fecha' => now(),
+                'id_usuario' => auth()->id(),
+            ]);
+        });
+
+        return redirect()
+            ->route('coordinator.incidents')
+            ->with('status', 'Estado de la denuncia actualizado correctamente.');
+    })->name('coordinator.incidents.status.update');
 
     // ---------------------------------------------------------------------------
     // Rutas para la página de planificación de rutas del coordinador de rutas
@@ -467,6 +544,12 @@ Route::middleware('role:2')->group(function () {
     Route::get('/coordinator/trucks', function () {
         return view('coordinator.trucks');
     })->name('coordinator.trucks');
+
+    // ---------------------------------------------------------------------------
+    // Rutas para la gestión de proceso de recolección
+    Route::get('/coordinator/collection-process', function () {
+        return view('coordinator.collection-process');
+    })->name('coordinator.collection-process');
 });
 
 // ---------------------------------------------------------------------------
